@@ -84,7 +84,7 @@ def load_data():
     if not isinstance(movies, pd.DataFrame):
         movies = pd.DataFrame(movies)
     return movies, similarity
-
+movies, similarity = load_data()
 if 'title' not in movies.columns:
     st.error("movies.pkl must contain a 'title' column.")
     st.stop()
@@ -179,3 +179,4 @@ if st.button("Recommend Movies"):
                         st.markdown(f"**{title}**")
 
                         st.caption(f"Match Score: {int(score*100)}%")
+
