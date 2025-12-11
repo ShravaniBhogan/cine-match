@@ -70,13 +70,20 @@ st.markdown("""
 # --- LOGIC (UNCHANGED) ---
 @st.cache_data
 def load_data():
+    # 1. Load the optimized movies file
     movies = pickle.load(open('movies.pkl', 'rb'))
-    similarity = pickle.load(open('similarity.pkl', 'rb'))
+    
+    # 2. Load the 3 parts of similarity and stitch them together
+    part0 = pickle.load(open('similarity_part_0.pkl', 'rb'))
+    part1 = pickle.load(open('similarity_part_1.pkl', 'rb'))
+    part2 = pickle.load(open('similarity_part_2.pkl', 'rb'))
+    
+    similarity = np.concatenate((part0, part1, part2), axis=0)
+    
+    # Ensure movies is a DataFrame
     if not isinstance(movies, pd.DataFrame):
         movies = pd.DataFrame(movies)
     return movies, similarity
-
-movies, similarity = load_data()
 
 if 'title' not in movies.columns:
     st.error("movies.pkl must contain a 'title' column.")
@@ -170,4 +177,5 @@ if st.button("Recommend Movies"):
                         
                         # Movie Details
                         st.markdown(f"**{title}**")
+
                         st.caption(f"Match Score: {int(score*100)}%")
